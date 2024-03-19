@@ -40,22 +40,52 @@ static int LinkPipeline(Streamer_t* streamer) {
     return 0;
 }
 
+static int create_caps_probe(Streamer_t* streamer) {
+
+    GstPad* srcpad = gst_element_get_static_pad(streamer->source, "src");
+    if (!srcpad) {
+        g_printerr("Failed to get source pad\n");
+        return -1;
+    }
+}
+
+static void init_videocrop_element(GstElement** videocrop) {
+
+    *videocrop = gst_element_factory_make("videocrop", "videocrop");
+    g_object_set (*videocrop, "left", 0, NULL);
+    g_object_set (*videocrop, "right", 0, NULL);
+    g_object_set (*videocrop, "bottom", 0, NULL);
+    g_object_set (*videocrop, "top", 0, NULL);
+}
+
 Streamer_t* InitPipeline(Streamer_t* streamer, int* argc, char** argv) {
 
     gst_init(argc, &argv);
 
     streamer->source = gst_element_factory_make("videotestsrc", "source");
+    if (streamer->source == NULL) {
+        LOG_DEBUG("Failed to create source element.");
+        return NULL;
+    }
     g_object_set(streamer->source, "pattern", 0, NULL);
 
-    streamer->crop = gst_element_factory_make("videocrop", NULL);
-    g_object_set (streamer->crop, "left", 0, NULL);
-    g_object_set (streamer->crop, "right", 0, NULL);
-    g_object_set (streamer->crop, "bottom", 0, NULL);
-    g_object_set (streamer->crop, "top", 0, NULL);
+    init_videocrop_element(&streamer->crop);
+    if (streamer->crop == NULL) {
+        LOG_DEBUG("Failed to create crop element.");
+        return NULL;
+    }
 
     streamer->sink = gst_element_factory_make("autovideosink", "sink");
+    if (streamer->sink == NULL) {
+        LOG_DEBUG("Failed to create sink element.");
+        return NULL;
+    }
     
     streamer->pipeline = gst_pipeline_new("test_pipeline");
+    if (streamer->pipeline == NULL) {
+        LOG_DEBUG("Failed to create pipeline element.");
+        return NULL;
+    }
 
     if (!streamer->pipeline || !streamer->source || !streamer->sink || !streamer->crop) {
         g_printerr("Not all elements could be created.\n");
@@ -87,6 +117,20 @@ Streamer_t* InitPipeline(Streamer_t* streamer, int* argc, char** argv) {
 int PauseResumeStream() {
     LOG("resumed/paused stream");
     return 0;
+}
+
+void SelectStreamPattern(Streamer_t* streamer, char input) {
+    
+    gint new_pattern = (gint) input;
+    g_object_get(G_OBJECT(streamer->source), "pattern", &new_pattern, NULL);
+    
+    if (new_pattern >= MAX_PATTERN_VALUE) {
+        LOG("Value above permited, defaulting to 0");
+        new_pattern = 0;
+    }
+    else {
+        g_object_set(G_OBJECT(streamer->source), "pattern", new_pattern, NULL);
+    }
 }
 
 void ChangeStreamPattern(Streamer_t* streamer) {

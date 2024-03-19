@@ -15,7 +15,7 @@ static void* InputRunnable(void* args) {
     char input;
 
     do {
-        LOG("input: ");
+        LOG("Input: ");
         scanf("%c", &input);
 
         switch (input) {

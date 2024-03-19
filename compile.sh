@@ -16,12 +16,17 @@ case "$1" in
         cmake ..
         make
         ;;
+    "-g" | "--gdb")
+        echo "Building with debugging symbols"
+        cmake -DCMAKE_BUILD_TYPE=Debug build
+        make
+        ;;
     "-c" | "--cross")
         echo "Cross build selected"
-        # Handle option B
         ;;
     *)  # Default case
-        echo "Invalid option. Use -h or --help for usage information."
+        cd build
+        make
         exit 1
         ;;
 esac
