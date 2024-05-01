@@ -1,4 +1,4 @@
-file(GLOB SOURCES "*.c")
+file(GLOB SOURCES "*.cpp")
 
 add_library(STREAMER_LIB ${SOURCES})
 target_link_libraries(STREAMER_LIB ${GSTREAMER_LIBRARIES})
