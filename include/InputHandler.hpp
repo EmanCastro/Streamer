@@ -7,7 +7,8 @@
 #include <atomic>
 #include <InputHandlerInterface.hpp>
 
-namespace InputHandler {
+namespace Streamer {
+
     class InputHandler : protected InputHandlerInterface {
     public:
 

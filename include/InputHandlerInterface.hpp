@@ -6,7 +6,7 @@
 #include <thread>
 #include <atomic>
 
-namespace InputHandler {
+namespace Streamer {
 class InputHandlerInterface {
 public:
 

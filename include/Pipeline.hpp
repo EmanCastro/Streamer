@@ -2,20 +2,23 @@
 #define PIPELINE_HPP
 
 #include <gst/gst.h>
+#include <memory>
 #include <PipelineInterface.hpp>
 
-namespace Pipeline {
+#define MAX_PATTERN_VALUE 25
+
+namespace Streamer {
     class Pipeline: public PipelineInterface {
 
     public:
 
-        void InitPipeline();
+        void InitPipeline(int& argc, char** argv);
         void DeInitPipeline();
 
-        void PauseResumeStream();
+        void StartStopPipeline();
         void ChangeStreamPattern();
-        void SelectStreamPattern();
-        void CropStream();
+        void SelectStreamPattern(char input);
+        void CropStream(int width, int height);
 
         GstElement* pipeline;
         GstElement* source;

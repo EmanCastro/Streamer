@@ -3,12 +3,12 @@
 
 #include <gst/gst.h>
 
-namespace Pipeline {
+namespace Streamer {
     class PipelineInterface {
 
     public:
 
-        virtual void InitPipeline() = 0;
+        virtual void InitPipeline(int& argc, char** argv) = 0;
         virtual void DeInitPipeline() = 0;
 
     private:

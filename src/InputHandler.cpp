@@ -3,7 +3,7 @@
 #include <thread>
 #include <InputHandler.hpp>
 
-namespace InputHandler {
+using namespace Streamer;
 
     void InputHandler::InputRunnable() {
 
@@ -53,5 +53,4 @@ namespace InputHandler {
             input_thread.join();
         }
     }
-}
 
