@@ -38,16 +38,14 @@ void Pipeline::StartStopPipeline() {
     gst_element_set_state(this->pipeline, GST_STATE_PLAYING);
 }
 
-void Pipeline::SelectStreamPattern(char input) {
+void Pipeline::SelectStreamPattern(int input) {
 
-    gint new_pattern = (gint) input;
-
-    if (new_pattern >= MAX_PATTERN_VALUE) {
+    if (input >= MAX_PATTERN_VALUE) {
         GST_DEBUG("Pattern value out of range, defaulting to 0");
-        new_pattern = 0;
+        input = 0;
     }
 
-    g_object_set(G_OBJECT(this->source), "pattern", new_pattern, NULL);
+    g_object_set(G_OBJECT(this->source), "pattern", static_cast<gint>(input), NULL);
 }
 
 
@@ -67,7 +65,4 @@ void Pipeline::DeInitPipeline() {
     gst_element_set_state(this->pipeline, GST_STATE_NULL);
     gst_object_unref(this->pipeline);
 }
-
-//void Pipeline::SelectStreamPattern(){}
-//void Pipeline::CropStream(){}
 

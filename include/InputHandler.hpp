@@ -6,6 +6,7 @@
 #include <thread>
 #include <atomic>
 #include <InputHandlerInterface.hpp>
+#include <Pipeline.hpp>
 
 namespace Streamer {
 
@@ -18,9 +19,12 @@ namespace Streamer {
         InputHandler() {
             isRunning = false;
         };
+        InputHandler(std::shared_ptr<Pipeline> streamer) : _streamer(streamer) {
+            isRunning = false;
+        }
 
     private:
-
+        std::shared_ptr<Pipeline> _streamer;
         void InputRunnable();
     };
 }

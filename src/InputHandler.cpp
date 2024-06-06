@@ -8,6 +8,7 @@ using namespace Streamer;
     void InputHandler::InputRunnable() {
 
         char input;
+        int pattern_value;
         std::cout << "InputHandler Running.." << std::endl;
         do {
             std::cout << "Input: ";
@@ -16,10 +17,17 @@ using namespace Streamer;
             switch (input) {
 
                 case 'p':
+                    this->_streamer->StartStopPipeline();
                     std::cout << "Failed to Pause/Resume stream\n" ;
                     break;
 
                 case 's':
+                    std::cout << "Select pattern value\n";
+                    std::cin >> pattern_value;
+
+                    if (this->_streamer) {
+                        this->_streamer->SelectStreamPattern(pattern_value);
+                    }
                     std::cout << "Switching input source..\n";
                     break;
 
@@ -29,6 +37,7 @@ using namespace Streamer;
 
                 case 'q':
                     std::cout << "Closing InputHandler..\n";
+                    this->_streamer->DeInitPipeline();
                     this->isRunning.store(false);
                     break;
 
