@@ -9,6 +9,8 @@ using namespace Streamer;
 
         char input;
         int pattern_value;
+        int width;
+        int height;
         std::cout << "InputHandler Running.." << std::endl;
         do {
             std::cout << "Input: ";
@@ -33,6 +35,9 @@ using namespace Streamer;
 
                 case 'v':
                     std::cout << "Request to switch viewport size. Insert new values\n";
+                    std::cin >> width;
+                    std::cin >> height;
+                    this->_streamer->CropStream(width, height);
                     break;
 
                 case 'q':

@@ -17,8 +17,8 @@ namespace Streamer {
 
         void StartStopPipeline();
         void ChangeStreamPattern();
-        void SelectStreamPattern(int input);
-        void CropStream(int width, int height);
+        void SelectStreamPattern(int& input);
+        void CropStream(int& width, int& height);
 
         GstElement* pipeline;
         GstElement* source;

@@ -38,7 +38,7 @@ void Pipeline::StartStopPipeline() {
     gst_element_set_state(this->pipeline, GST_STATE_PLAYING);
 }
 
-void Pipeline::SelectStreamPattern(int input) {
+void Pipeline::SelectStreamPattern(int &input) {
 
     if (input >= MAX_PATTERN_VALUE) {
         GST_DEBUG("Pattern value out of range, defaulting to 0");
@@ -49,13 +49,13 @@ void Pipeline::SelectStreamPattern(int input) {
 }
 
 
-void Pipeline::CropStream(int width, int height) {
+void Pipeline::CropStream(int& width, int& height) {
 
     gint g_width = static_cast<gint>(width);
     gint g_height = static_cast<gint>(height);
 
-    g_object_set(this->crop, "left", g_width, NULL);
-    g_object_set(this->crop, "right", g_height, NULL);
+    g_object_set(this->crop, "right", g_width, NULL);
+    g_object_set(this->crop, "top", g_height, NULL);
 }
 
 void Pipeline::DeInitPipeline() {
