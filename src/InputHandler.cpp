@@ -19,16 +19,15 @@ using namespace Streamer;
             switch (input) {
 
                 case 'p':
-                    this->_streamer->StartStopPipeline();
-                    std::cout << "Failed to Pause/Resume stream\n" ;
+                    streamer_->StartStopPipeline();
                     break;
 
                 case 's':
                     std::cout << "Select pattern value\n";
                     std::cin >> pattern_value;
 
-                    if (this->_streamer) {
-                        this->_streamer->SelectStreamPattern(pattern_value);
+                    if (streamer_) {
+                        streamer_->SelectStreamPattern(pattern_value);
                     }
                     std::cout << "Switching input source..\n";
                     break;
@@ -37,13 +36,13 @@ using namespace Streamer;
                     std::cout << "Request to switch viewport size. Insert new values\n";
                     std::cin >> width;
                     std::cin >> height;
-                    this->_streamer->CropStream(width, height);
+                    streamer_->CropStream(width, height);
                     break;
 
                 case 'q':
                     std::cout << "Closing InputHandler..\n";
-                    this->_streamer->DeInitPipeline();
-                    this->isRunning.store(false);
+                    streamer_->DeInitPipeline();
+                    isRunning.store(false);
                     break;
 
                 default:
@@ -58,8 +57,8 @@ using namespace Streamer;
     }
    
     void InputHandler::StartInput() {
-        this->isRunning.store(true);
-        this->input_thread = std::thread([this]{this->InputRunnable();});
+        isRunning.store(true);
+        input_thread = std::thread([this]{InputRunnable();});
     }
 
     void InputHandler::EndInput() {

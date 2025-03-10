@@ -19,12 +19,12 @@ namespace Streamer {
         InputHandler() {
             isRunning = false;
         };
-        InputHandler(std::shared_ptr<Pipeline> streamer) : _streamer(streamer) {
+        InputHandler(std::shared_ptr<Pipeline> streamer) : streamer_(streamer) {
             isRunning = false;
         }
 
     private:
-        std::shared_ptr<Pipeline> _streamer;
+        std::shared_ptr<Pipeline> streamer_;
         void InputRunnable();
     };
 }
