@@ -3,13 +3,15 @@
 #include <thread>
 
 #include <Pipeline.hpp>
+#include <qlogger.h>
 #include <gst/gst.h>
 
 using namespace Streamer;
 
 void Pipeline::InitPipeline(int& argc, char** argv) {
     gst_init(&argc, &argv);
-    if (false) {
+    main_loop = g_main_loop_new(NULL, FALSE);
+    if (true) {
         GST_DEBUG("Init Video File Pipeline.");
         InitVideoFilePipeline();
     }
@@ -53,8 +55,6 @@ void Pipeline::InitTestSrcPipeline() {
     if (source == nullptr)
         GST_DEBUG("Failed to create source element.");
 
-    source = gst_element_factory_make("filesrc", "source");
-
     crop = gst_element_factory_make("videocrop", "videocrop");
     g_object_set(crop, "left", 0, NULL);
     g_object_set(crop, "right", 0, NULL);
@@ -77,6 +77,8 @@ void Pipeline::StartStopPipeline() {
     GstStateChangeReturn ret = gst_element_set_state(pipeline, GST_STATE_PLAYING);
     if (ret == GST_STATE_CHANGE_FAILURE) {
         GST_ERROR("Failed to set pipeline to PLAYING state.");
+    } else {
+        g_main_loop_run(main_loop);
     }
 }
 
@@ -107,4 +109,3 @@ void Pipeline::DeInitPipeline() {
     gst_element_set_state(pipeline, GST_STATE_NULL);
     gst_object_unref(pipeline);
 }
-
