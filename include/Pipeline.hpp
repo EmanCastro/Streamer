@@ -35,18 +35,22 @@ namespace Streamer {
         GMainLoop *main_loop;
 
     private:
+        /**
+         * TODO: this function is no longer only for demuxer<-> decoder pad added
+         * decoder <-> autovideosink is also using this callback so it should be
+         * modified accordingly 
+         */
         static void OnPadAdded(GstElement *element, GstPad *pad, gpointer data) {
             GstPad *sinkpad;
             GstElement *decoder = (GstElement *)data;
             QLOG("Pad called.");
 
-            // demuxer -> decoder
             GstCaps *new_pad_caps = gst_pad_get_current_caps(pad);
             GstStructure *new_pad_struct = gst_caps_get_structure(new_pad_caps, 0);
             const gchar *new_pad_type = gst_structure_get_name(new_pad_struct);
             QLOG("New pad type: {}", new_pad_type);
 
-            if (g_str_has_prefix(new_pad_type, "video/x-h264")) {
+            if (g_str_has_prefix(new_pad_type, "video/x-h264") || g_str_has_prefix(new_pad_type, "video/x-raw")) {
                 sinkpad = gst_element_get_static_pad(decoder, "sink");
                 if (gst_pad_link(pad, sinkpad) != GST_PAD_LINK_OK) {
                     QLOG("Failed to link demux pad to decoder sink pad.");

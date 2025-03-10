@@ -11,6 +11,7 @@ using namespace Streamer;
 void Pipeline::InitPipeline(int& argc, char** argv) {
     gst_init(&argc, &argv);
     main_loop = g_main_loop_new(NULL, FALSE);
+    // TODO: fix this poor excuse of a pipeline switcher
     if (true) {
         GST_DEBUG("Init Video File Pipeline.");
         InitVideoFilePipeline();
@@ -24,36 +25,36 @@ void Pipeline::InitPipeline(int& argc, char** argv) {
 void Pipeline::InitVideoFilePipeline() {
     source = gst_element_factory_make("filesrc", "source");
     if (source == nullptr)
-        GST_DEBUG("Failed to create source element.");
+        GST_ERROR("Failed to create source element.");
     g_object_set(source, "location", "/home/eman/Dev/Streamer2/bench_press.mkv", NULL);
 
     demux = gst_element_factory_make("matroskademux", "demux");
     if (demux == nullptr)
-        GST_DEBUG("Failed to create demux element.");
+        GST_ERROR("Failed to create demux element.");
 
     decoder = gst_element_factory_make("decodebin", "decode");
     if (decoder == nullptr)
-        GST_DEBUG("Failed to create decode element.");
+        GST_ERROR("Failed to create decode element.");
 
     sink = gst_element_factory_make("autovideosink", "sink");
     if (sink == nullptr)
-        GST_DEBUG("Failed to create sink element");
+        GST_ERROR("Failed to create sink element");
 
     pipeline = gst_pipeline_new("videofile_pipeline");
     if (pipeline == nullptr)
-        GST_DEBUG("Failed to create pipeline");
+        GST_ERROR("Failed to create pipeline");
 
     gst_bin_add_many(GST_BIN(pipeline), source, demux, decoder, sink, NULL);
     gst_element_link(source, demux);
-    gst_element_link_many(decoder, sink, NULL);
 
     g_signal_connect(demux, "pad-added", G_CALLBACK(OnPadAdded), decoder);
+    g_signal_connect(decoder, "pad-added", G_CALLBACK(OnPadAdded), sink);
 }
 
 void Pipeline::InitTestSrcPipeline() {
     source = gst_element_factory_make("videotestsrc", "source");
     if (source == nullptr)
-        GST_DEBUG("Failed to create source element.");
+        GST_ERROR("Failed to create source element.");
 
     crop = gst_element_factory_make("videocrop", "videocrop");
     g_object_set(crop, "left", 0, NULL);
@@ -63,11 +64,11 @@ void Pipeline::InitTestSrcPipeline() {
 
     sink = gst_element_factory_make("autovideosink", "sink");
     if (sink == nullptr)
-        GST_DEBUG("Failed to create sink element");
+        GST_ERROR("Failed to create sink element");
 
     pipeline = gst_pipeline_new("test_pipeline");
     if (pipeline == nullptr)
-        GST_DEBUG("Failed to create pipeline");
+        GST_ERROR("Failed to create pipeline");
 
     gst_bin_add_many(GST_BIN(pipeline), source, crop, sink, NULL);
     gst_element_link_many(source, crop, sink, NULL);
