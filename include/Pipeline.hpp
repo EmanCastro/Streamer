@@ -30,6 +30,7 @@ namespace Streamer {
         GstElement* crop;
         GstElement* demux;
         GstElement* decoder;
+        GstElement* videoscale;
         GstBus* bus;
         GstMessage* message;
         GMainLoop *main_loop;
